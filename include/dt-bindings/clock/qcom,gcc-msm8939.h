@@ -167,6 +167,31 @@
 #define GCC_ULTAUDIO_LPAIF_AUX_I2S_CLK		158
 #define GCC_CODEC_DIGCODEC_CLK			159
 #define GCC_MSS_Q6_BIMC_AXI_CLK			160
+#define GPLL3					161
+#define GPLL3_VOTE				162
+#define GPLL4					163
+#define GPLL4_VOTE				164
+#define GPLL5					165
+#define GPLL5_VOTE				166
+#define GPLL6					167
+#define GPLL6_VOTE				168
+#define BYTE1_CLK_SRC				169
+#define GCC_MDSS_BYTE1_CLK			170
+#define ESC1_CLK_SRC				171
+#define GCC_MDSS_ESC1_CLK			172
+#define PCLK1_CLK_SRC				173
+#define GCC_MDSS_PCLK1_CLK			174
+#define GCC_GFX_TBU_CLK				175
+#define GCC_CPP_TBU_CLK				176
+#define GCC_MDP_RT_TBU_CLK			177
+#define USB_FS_SYSTEM_CLK_SRC			178
+#define USB_FS_IC_CLK_SRC			179
+#define GCC_USB_FS_AHB_CLK			180
+#define GCC_USB_FS_IC_CLK			181
+#define GCC_USB_FS_SYSTEM_CLK			182
+#define GCC_VENUS0_CORE0_VCODEC0_CLK		183
+#define GCC_VENUS0_CORE1_VCODEC0_CLK		184
+#define GCC_OXILI_TIMER_CLK			185
 
 /* Indexes for GDSCs */
 #define BIMC_GDSC				0
@@ -175,5 +200,7 @@
 #define JPEG_GDSC				3
 #define VFE_GDSC				4
 #define OXILI_GDSC				5
+#define VENUS_CORE0_GDSC			6
+#define VENUS_CORE1_GDSC			7
 
 #endif
