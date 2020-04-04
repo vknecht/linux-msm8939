@@ -19,7 +19,6 @@
 
 	chosen {
 		stdout-path = "serial0";
-		bootargs = "boot_cpus=0, maxcpus=1";
 	};
 
 	reserved-memory {
@@ -40,6 +39,15 @@
 	};
 
 	soc {
+		qcom,memshare {
+			compatible = "qcom,memshare";
+
+			qcom,client_1 {
+				compatible = "qcom,memshare-peripheral";
+				qcom,peripheral-size = <2097152>;
+				label = "modem";
+			};
+		};
 
 		sdhci@7824000 {
 			status = "okay";
@@ -120,6 +128,37 @@
 		vbus-gpio = <&msmgpio 62 GPIO_ACTIVE_HIGH>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&usb_vbus_default>;
+	};
+
+// idol3: vol up seems ok, but vol down doesn't appear in downstream
+/*
+	gpio-keys {
+		compatible = "gpio-keys";
+		input-name = "gpio-keys";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		autorepeat;
+
+		label = "GPIO Buttons";
+
+		button@0 {
+			label = "Volume Up";
+			gpios = <&msmgpio 107 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <KEY_VOLUMEUP>;
+			wakeup-source;
+			debounce-interval = <15>;
+		};
+
+		button@1 {
+			label = "Volume Down";
+			gpios = <&msmgpio 117 GPIO_ACTIVE_LOW>;
+			linux,input-type = <1>;
+			linux,code = <KEY_VOLUMEDOWN>;
+			wakeup-source;
+			debounce-interval = <15>;
+		};
+*/
 	};
 };
 
