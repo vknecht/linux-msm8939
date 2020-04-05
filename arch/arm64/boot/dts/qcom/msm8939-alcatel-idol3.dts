@@ -158,8 +158,8 @@
 			wakeup-source;
 			debounce-interval = <15>;
 		};
-*/
 	};
+*/
 };
 
 &msmgpio {
