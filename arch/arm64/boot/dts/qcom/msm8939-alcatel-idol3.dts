@@ -9,7 +9,7 @@
 
 / {
 	model = "Alcatel OneTouch Idol 3 (5.5)";
-	compatible = "alcatel,idol3", "qcom,msm8939";
+	compatible = "alcatel,idol3", "qcom,msm8939-mtp", "qcom,msm8939", "qcom,mtp";
 	qcom,msm-id = <239 0>;       
 	qcom,board-id = <8 0>;
 
