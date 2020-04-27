@@ -470,7 +470,7 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 			reg = <0x78b9000 0x600>;
-			interrupts = <GIC_SPI 99 0>;
+			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
 			clock-names = "iface", "core";
 			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
 				<&gcc GCC_BLSP1_QUP5_I2C_APPS_CLK>;
