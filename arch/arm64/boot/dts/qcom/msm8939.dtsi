@@ -33,23 +33,8 @@
 		#size-cells = <2>;
 		ranges;
 
-		external_image_mem: tz-apps@86000000 {
-			reg = <0x0 0x86000000 0x0 0x0800000>;
-			no-map;
-		};
-
-		modem_adsp_mem: mpss_mem: mpss@86800000 {
-			reg = <0x0 0x86800000 0x0 0x05600000>;
-			no-map;
-		};
-
-		peripheral_region: peripheral_region0x8be00000{
-			reg = <0x00 0x8be00000 0x00 0x600000>;
-			no-map;
-		};
-		
-		venus_mem: venus@89900000 {
-			reg = <0x0 0x89900000 0x0 0x0500000>;
+		tz-apps@86000000 {
+			reg = <0x0 0x86000000 0x0 0x300000>;
 			no-map;
 		};
 
@@ -86,11 +71,26 @@
 			no-map;
 		};
 
+		mpss_mem: mpss@86800000 {
+			reg = <0x0 0x86800000 0x0 0x2b00000>;
+			no-map;
+		};
+
 		wcnss_mem: wcnss@89300000 {
 			reg = <0x0 0x89300000 0x0 0x600000>;
 			no-map;
 		};
 
+		venus_mem: venus@89900000 {
+			reg = <0x0 0x89900000 0x0 0x600000>;
+			no-map;
+		};
+#if 0
+		peripheral_region: peripheral_region0x8be00000{
+			reg = <0x00 0x8be00000 0x00 0x600000>;
+			no-map;
+		};
+#endif
 		mba_mem: mba@8ea00000 {
 			no-map;
 			reg = <0 0x8ea00000 0 0x100000>;
