@@ -45,6 +45,7 @@ struct qcom_iommu_dev {
 	struct device		*dev;
 	struct clk		*iface_clk;
 	struct clk		*bus_clk;
+	struct clk		*tlb_clk;
 	void __iomem		*local_base;
 	u32			 sec_id;
 	u8			 num_ctxs;
@@ -643,11 +644,20 @@ static int qcom_iommu_enable_clocks(struct qcom_iommu_dev *qcom_iommu)
 		return ret;
 	}
 
+	ret = clk_prepare_enable(qcom_iommu->tlb_clk);
+	if (ret) {
+		dev_err(qcom_iommu->dev, "Couldn't enable tlb_clk\n");
+		clk_disable_unprepare(qcom_iommu->bus_clk);
+		clk_disable_unprepare(qcom_iommu->iface_clk);
+		return ret;
+	}
+
 	return 0;
 }
 
 static void qcom_iommu_disable_clocks(struct qcom_iommu_dev *qcom_iommu)
 {
+	clk_disable_unprepare(qcom_iommu->tlb_clk);
 	clk_disable_unprepare(qcom_iommu->bus_clk);
 	clk_disable_unprepare(qcom_iommu->iface_clk);
 }
@@ -840,6 +850,12 @@ static int qcom_iommu_device_probe(struct platform_device *pdev)
 	if (IS_ERR(qcom_iommu->bus_clk)) {
 		dev_err(dev, "failed to get bus clock\n");
 		return PTR_ERR(qcom_iommu->bus_clk);
+	}
+
+	qcom_iommu->tlb_clk = devm_clk_get(dev, "tlb");
+	if (IS_ERR(qcom_iommu->tlb_clk)) {
+		dev_dbg(dev, "failed to get tlb clock\n");
+		qcom_iommu->tlb_clk = NULL;
 	}
 
 	if (of_property_read_u32(dev->of_node, "qcom,iommu-secure-id",
