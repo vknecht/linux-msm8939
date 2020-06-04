@@ -403,6 +403,10 @@
 			#reset-cells = <1>;
 			#power-domain-cells = <1>;
 			reg = <0x1800000 0x80000>;
+			clock-names = "xo",
+				      "sleep_clk";
+			clocks = <&xo_board>,
+				 <&sleep_clk>;
 		};
 
 		tcsr_mutex_regs: syscon@1905000 {
