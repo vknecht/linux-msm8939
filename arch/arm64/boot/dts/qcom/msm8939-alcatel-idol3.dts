@@ -13,10 +13,7 @@
 #define REGLCD 1
 #define REGLCDSUPPLY 1
 #define FAN53555 0
-#define PWMBACKLIGHT 0
-#define MDSSTE 0
 #define I2C2GYRO 0
-#define PM8916CODEC 1
 
 #if DRM == 0
 / {
@@ -39,9 +36,7 @@
 	};
 
 	chosen {
-		//bootargs = "drm.debug=0x1ff loglevel=10 earlycon=tty0 console=tty0";
 		bootargs = "drm.debug=12 loglevel=10 earlycon=tty0 console=tty0";
-		//bootargs = "earlycon=tty0 console=tty0";
 		stdout-path = "display0";
 
 		#address-cells = <2>;
@@ -162,6 +157,7 @@
 
 		i2c@78b9000 {
 			synaptics@20 {
+				status = "disabled";
 				compatible = "syna,rmi4-i2c";
 				reg = <0x20>;
 				pinctrl-names = "default";
@@ -171,6 +167,8 @@
 				reset-gpios = <&msmgpio 12 GPIO_ACTIVE_LOW>;
 				#address-cells = <1>;
 				#size-cells = <0>;
+
+				syna,startup-delay-ms = <100>;
 
 				rmi4-f01@01 {
 					reg = <0x1>;
@@ -266,15 +264,13 @@
 		etm@85f000 { status = "disabled"; };
 	};
 
-#if PWMBACKLIGHT
 	backlight: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&pm8916_pwm 0 255000>;
 		brightness-levels = <0 255>;
 		num-interpolated-steps = <255>;
-		default-brightness-level = <255>;
+		default-brightness-level = <64>;
 	};
-#endif
 
 	gpio-keys {
 		compatible = "gpio-keys";
@@ -301,7 +297,7 @@
 		regulator-name = "lcd_enp";
 		regulator-min-microvolt = <1800000>; // Arbitrary value
 		regulator-max-microvolt = <1800000>;
-		//regulator-always-on;
+		regulator-boot-on; // allows fb console to show up briefly at boot without always-on
 		gpio = <&msmgpio 105 0>;
 		enable-active-high;
 		pinctrl-names = "default";
@@ -313,7 +309,7 @@
 		regulator-name = "lcd_enn";
 		regulator-min-microvolt = <1800000>; // Arbitrary value
 		regulator-max-microvolt = <1800000>;
-		//regulator-always-on;
+		regulator-boot-on; // allows fb console to show up briefly at boot without always-on
 		gpio = <&msmgpio 106 0>;
 		enable-active-high;
 		pinctrl-names = "default";
@@ -435,34 +431,6 @@
 		};
 	};
 
-#if MDSSTE
-	pmx_mdss_te {
-		mdss_te_default: mdss_te_default {
-			pinmux {
-				function = "gpio";
-				pins = "gpio24";
-			};
-			pinconf {
-				pins = "gpio24";
-				drive-strength = <2>;
-				bias-pull-down;
-			};
-		};
-
-		mdss_te_sleep: mdss_te_sleep {
-			pinmux {
-				function = "gpio";
-				pins = "gpio24";
-			};
-			pinconf {
-				pins = "gpio24";
-				drive-strength = <2>;
-				bias-pull-down;
-			};
-		};
-	};
-#endif // MDSSTE
-
 #if REGLCD
 	lcd_enp_default: lcd_enp_default {
 		pinmux {
@@ -515,19 +483,18 @@
         };
 
 };
-#if PWMBACKLIGHT
+
 &pm8916_mpps {
 	pwm_out: pm8916_mpp4 {
 		pinconf {
 			pins = "mpp4";
 			function = "digital";
 			output-low;
-			power-source = <PM8916_MPP_L5>; // _VPH on other msm8916
+			power-source = <PM8916_MPP_L5>;
 			qcom,dtest = <1>;
 		};
 	};
 };
-#endif // PWMBACKLIGHT
 
 &spmi_bus {
  	pm8916@0 {
@@ -542,26 +509,21 @@
  	};
 
 	pm8916@1 {
-
-#if PWMBACKLIGHT
 		pwm@bc00 {
 			status = "okay";
 			pinctrl-names = "default";
 			pinctrl-0 = <&pwm_out>;
 		};
-#endif
 
 		vibrator@c000 {
 			status = "okay";
 		};
 
-#if PM8916CODEC
 		codec@f000 {
 			qcom,micbias-lvl = <2800>;
 			qcom,mbhc-vthreshold-low = <75 150 237 450 500>;
 			qcom,mbhc-vthreshold-high = <75 150 237 450 500>;
 		};
-#endif
 	};
 };
 
@@ -687,21 +649,18 @@
 	pinctrl-1 = <&mdss_sleep>;
 
 	panel@0 {
-		//compatible = "mdss,r63315"; //"sharp,r63315";
-		compatible = "mdss,nt35596";
+		compatible = "mdss,r63315"; // "mdss,nt35596";
 		reg = <0>;
 
 		reset-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
 		power-supply = <&pm8916_l17>;
-		//vdd-supply = <&pm8916_l8>;
-		//vddio-supply = <&pm8916_l6>;
+		vddio-supply = <&pm8916_l6>;
 #if REGLCDSUPPLY
 		enp-supply = <&reg_lcd_enp>;
 		enn-supply = <&reg_lcd_enn>;
 #endif
-#if PWMBACKLIGHT
 		backlight = <&backlight>;
-#endif
+
 		ports {
 			#address-cells = <1>;
 			#size-cells = <0>;
