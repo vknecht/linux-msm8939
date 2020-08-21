@@ -9,7 +9,7 @@
 #include <dt-bindings/pinctrl/qcom,pmic-mpp.h>
 
 #define DRM 1
-#define FBSIMPLE 1
+#define FBSIMPLE 0
 #define REGLCD 1
 #define REGLCDSUPPLY 1
 #define FAN53555 0
@@ -678,7 +678,7 @@
 		port@1 {
 			endpoint {
 				remote-endpoint = <&panel_in>;
-				data-lanes = <3 0 1 2>;
+				data-lanes = <1 2 3 0>;
 			};
 		};
 	};
