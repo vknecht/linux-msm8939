@@ -161,7 +161,7 @@
 				compatible = "syna,rmi4-i2c";
 				reg = <0x20>;
 				pinctrl-names = "default";
-				pinctrl-0 = <&ts_pins>;
+				pinctrl-0 = <&ts_int_active &ts_reset_active>;
 				interrupt-parent = <&msmgpio>;
 				interrupts = <13 0x2008>;
 				reset-gpios = <&msmgpio 12 GPIO_ACTIVE_LOW>;
@@ -181,20 +181,18 @@
 				};
 			};
 
-			edt-ft5x06@38 {
+			touchscreen@38 {
 				status = "okay";
-				compatible = "edt,edt-ft5406";
+				compatible = "edt,edt-ft5406", "edt,edt-ft5xO6";
 				reg = <0x38>;
 				pinctrl-names = "default";
-				pinctrl-0 = <&ts_pins>;
+				pinctrl-0 = <&ts_int_active &ts_reset_active>;
 				interrupt-parent = <&msmgpio>;
 				interrupts = <13 0x2008>;
 				reset-gpios = <&msmgpio 12 GPIO_ACTIVE_LOW>;
 
 				touchscreen-size-x = <1080>;
 				touchscreen-size-y = <1920>;
-
-				wakeup-source;
 			};
 		};
 
@@ -352,19 +350,6 @@
 			};
 		};
 
-		ts_int_suspend: pmx_ts_int_suspend {
-			pinmux {
-				pins = "gpio13";
-				function = "gpio";
-			};
-
-			pinconf {
-				pins = "gpio13";
-				drive-strength = <2>;
-				bias-pull-down;
-			};
-		};
-
 		ts_reset_active: pmx_ts_reset_active {
 			pinmux {
 				pins = "gpio12";
@@ -375,32 +360,6 @@
 				pins = "gpio12";
 				drive-strength = <16>;
 				bias-pull-up;
-			};
-		};
-
-		ts_reset_suspend: pmx_ts_reset_suspend {
-			pinmux {
-				pins = "gpio12";
-				function = "gpio";
-			};
-
-			pinconf {
-				pins = "gpio12";
-				drive-strength = <2>;
-				bias-pull-down;
-			};
-		};
-
-		ts_release: pmx_ts_release {
-			pinmux{
-				pins = "gpio13", "gpio12";
-				label = "pmx_ts_release";
-			};
-			
-			pinconf {
-				pins = "gpio13", "gpio12";
-				drive-strength = <2>;
-				bias-pull-down;
 			};
 		};
 	};
